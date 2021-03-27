@@ -44,7 +44,7 @@ namespace RestAPI
                     // "server=localhost;database=myapp_development;uid=root;password=Pa$$w0rd!",
 
                     // Muyiwa Connection
-                    "server=localhost;database=RailsApp_development;uid=sammy;password=password",
+                    // "server=localhost;database=RailsApp_development;uid=sammy;password=password",
 
                     // Cristiane Connection
                     // "server=localhost;port=3306;database=RailsApp_development;uid=codeboxx;password=Codeboxx1*",
