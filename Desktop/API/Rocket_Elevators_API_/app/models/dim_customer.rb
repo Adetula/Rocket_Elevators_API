@@ -1,2 +1,0 @@
-class DimCustomer < WarehouseRecord
-end
