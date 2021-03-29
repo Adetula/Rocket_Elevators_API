@@ -4,7 +4,7 @@ This repo serves as the Rocket Elevators REST API developed for CodeBoxx's week 
 
 The queries for the REST API are found in a public PostMan workspace at: https://app.getpostman.com/join-team?invite_code=fa798e97463863bf0ae7706c4d727181
 
-The REST API URL is: https://rocket-api-burst.azurewebsites.net//api/interventions
+The REST API URL is: https://rocket-api-burst.azurewebsites.net/interventions
 
 
 Each request works as follows:
