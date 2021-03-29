@@ -53,7 +53,7 @@ namespace RestAPI.Controllers
 
       if (findIntervention.status == "InProgress")
       {
-        ModelState.AddModelError("Status", "This status has been started already.");
+        ModelState.AddModelError("Status", "This status is in progress.");
       }
 
       if (!ModelState.IsValid)
@@ -94,7 +94,7 @@ try
 
       if (findIntervention.status == "Completed")
       {
-        ModelState.AddModelError("Status", "Looks like you didn't change the status.");
+        ModelState.AddModelError("Status", "Status completed.");
       }
 
       if (!ModelState.IsValid)
