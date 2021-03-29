@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestAPI.Models;
 
-namespace Rocket_Elevators_REST_API.Controllers
+namespace RestAPI.Controllers
 {
-  [Route("api/[controller]")]
+  [Route("[controller]")]
   [ApiController]
   public class InterventionsController : ControllerBase
   {
@@ -41,84 +41,93 @@ namespace Rocket_Elevators_REST_API.Controllers
     }
 
 
-   // PUT: api/Interventions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}/inprogress")]
-        public async Task<IActionResult> PutIntervention(long id, Intervention intervention)
+    [HttpPut("{id}/start")]
+    public async Task<IActionResult> ChangeInterventionStatus(long id)
+    {
+      var findIntervention = await _context.interventions.FindAsync(id);
+
+      if (findIntervention == null)
+      {
+        return NotFound();
+      }
+
+      if (findIntervention.status == "InProgress")
+      {
+        ModelState.AddModelError("Status", "This status has been started already.");
+      }
+
+      if (!ModelState.IsValid)
+      {
+        return BadRequest(ModelState);
+      }
+
+      findIntervention.status = "InProgress";
+      findIntervention.start_date = DateTime.Today;
+try
+      {
+        await _context.SaveChangesAsync();
+      }
+      catch (DbUpdateConcurrencyException)
+      {
+        if (!InterventionExists(id))
         {
-            if (id != intervention.id)
-            {
-                return BadRequest();
-            }
-
-            Intervention interventionFound = await _context.interventions.FindAsync(id);
-            interventionFound.status = intervention.status;
-            interventionFound.start_date = DateTime.Now;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!InterventionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+          return NotFound();
         }
-
-    // PUT: api/Interventions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-      [HttpPut("{id}/completed")]
-        public async Task<IActionResult> PutIntervention2(long id, Intervention intervention)
+        else
         {
-            if (id != intervention.id)
-            {
-                return BadRequest();
-            }
-
-            Intervention interventionFound = await _context.interventions.FindAsync(id);
-            interventionFound.status = intervention.status;
-            interventionFound.end_date = DateTime.Now;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!InterventionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+          throw;
         }
-    
+      }
 
+      return NoContent();
+    }
 
-         private bool InterventionExists(long id)
+    [HttpPut("{id}/completed")]
+    public async Task<IActionResult> CompleteIntervention(long id)
+    {
+      var findIntervention = await _context.interventions.FindAsync(id);
+
+      if (findIntervention == null)
+      {
+        return NotFound();
+      }
+
+      if (findIntervention.status == "Completed")
+      {
+        ModelState.AddModelError("Status", "Looks like you didn't change the status.");
+      }
+
+      if (!ModelState.IsValid)
+      {
+        return BadRequest(ModelState);
+      }
+
+      findIntervention.status = "Completed";
+      findIntervention.end_date = DateTime.Today;
+
+      try
+      {
+        await _context.SaveChangesAsync();
+      }
+      catch (DbUpdateConcurrencyException)
+      {
+        if (!InterventionExists(id))
         {
-            return _context.interventions.Any(e => e.id == id);
+          return NotFound();
         }
+        else
+        {
+          throw;
+        }
+      }
 
-        }
+      return NoContent();
+    }
+
+
+    private bool InterventionExists(long id)
+    {
+      return _context.interventions.Any(e => e.id == id);
+    }
   }
-  
-
-
-
-
-
+}
